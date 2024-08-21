@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: url('https://images.pexels.com/photos/1568607/pexels-photo-1568607.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #fff;
+            padding-top: 80px; /* To prevent content hidden behind header */
+        }
+
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .header img {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.5);
+            margin-bottom: 40px;
+        }
+
+        /* Formula Section */
+        .formula-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 5px solid #00BCD4;
+            border-radius: 5px;
+        }
+
+        .formula-section h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #00BCD4;
+        }
+
+        .formula-section p {
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        /* Instructions Section */
+        .instructions-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 5px solid #00BCD4;
+            border-radius: 5px;
+        }
+
+        .instructions-section h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #00BCD4;
+        }
+
+        .instructions-section ol {
+            font-size: 18px;
+            line-height: 1.6;
+            padding-left: 20px;
+        }
+
+        /* Form Styles */
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-control {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-control label {
+            font-size: 18px;
+            margin-bottom: 5px;
+            display: block;
+            color: #fff;
+        }
+
+        .form-control select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            background-color: #fff;
+            color: #000;
+        }
+
+        /* Semester and Courses Styles */
+        .semester {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        .semester h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #00BCD4;
+            border-bottom: 2px solid #00BCD4;
+            padding-bottom: 5px;
+        }
+
+        .course {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .course-name {
+            font-size: 16px;
+            flex: 1;
+            color: #fff;
+        }
+
+        .grade-select {
+            width: 150px;
+        }
+
+        /* Button Styles */
+        .calculate-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #fff;
+            background-color: #2196F3;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .calculate-btn:hover {
+            background-color: #1976D2;
+        }
+
+        /* Result Styles */
+        .result-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(76, 175, 80, 0.2);
+            border-left: 5px solid #4CAF50;
+            border-radius: 5px;
+        }
+
+        .result-section h2 {
+            font-size: 22px;
+            color: #4CAF50;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 600px) {
+            .course {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .grade-select {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .header img {
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="header">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAMAAACfWMssAAAAz1BMVEX/////ywj1fAD/yQD1fxj1gR7/+vf//Pr+9/D/zAD0eQD1fhP/+fT//vr///33oF795tj83cn+8uf1hCT//PL/+uf/zhn4o1j0dQD2iiz94c/2jkL3lEb2kD/2jTj2jjP4p2v5tn76x6H4q3T83MH/88T/6ZT+9tj/113/66D+8sr/4Xz/6qj/77b/0Tj/3Gf+6sf/2UX+4Kb6uG3/3Fn+3Y/7yIT/1S/3n03+1n/7w3D+1mn+zVT70rb7ynr6wZH+0Er8yV76wIT83bP5t47CKndRAAADlElEQVRIie1T22KiOhTFkHCLAoYKQiOQgK2X0R5PrTrTydDO+P/fdALE01btZeZhnrpf2GRnZa3staNpn/FXY3x1df1HwImuT38L0JvNms9Et+d1cj2++BDu4ktoS+RgsdTtm0FPGyz1+eAjwIGUuF1Mb7Yd3Q4nd4u1rS9nH6KUjJ3Q1iVc7+i6bXdaxR/QOtE7MvTwn1WT2OH4Y8CFZKyBV5f/NsBO5/3mXsx67njbEq5uUTRvU3vq9mZvenql2+tlS2PfURhsFPlyHerbt4BbXTalwemT2xih3Vz9ySbpb3jSm4bqVp3wqwcRSr8pfin3TTPd2Y2iWN8GCCAY3dvt/2rxzvh8UTf87kFHIHig1Nfv4Hoto738EcCdWwHMlKmrV4QmFTFM+b1QwAeGQV8zMaSPYTsN1668iUk4fwnsDp2sSshgbjfA8J7iiGhmhfFmaTe9WY0tn0dg2D+i3EEI8O7n4/eVhNrhxgG8J4VAzB7ksNrLyeMmwgDC2DgCcoAQgjgtvt1LM8MKx4lcJRH2HqTO+x+MYmkPwsw8AhIJzOoj02iztpcezolcNTigD/b2Lr/EEINMOnSsVDMiCLhfZQ6Elz/XSwr2jaa+czlZbSiCADG/H8AROQa6wsF7w+2WIwejYkqdtntJPPr6C2En48TUSulO98QQksG4OU5Q6PAcCQWkPMBpc4qxg/hEqTSkwo5w68zaBwEfKWBWUZD7Te4D7J0ora8TY6qEcBwxBcw9WKjVAiN+BqdZcliEynmct6nPaKGcI68QalqZ4ZHbpuZ+Vzb7SZ4fNjMcnCWsd0NQqZwcGPNDO8oYe9Z5oNb1cFwe9vGGXHClwac4PS/U7PYrTkGqkIaoW2kJReJ7IOWsNvMoLJ/Fw7ggRTAq26LfAJO2nFDokSoFIO8/0XYt4osCgLioryPytGpqrmVqbrdxoiuoxyW1vx8BsBOJT6z68JIVFMsXq1RZgrFGrqlu5yaMiXYEzL4npzaOcl4fSAogH8zId/+XkJTlM0FJ2X/qppXLtwW8pLmOVQUQxfxZr13raZZN63lDBJVvUo1grTaTpJS/mPxyFFksqF5YJ7xAPsvq2b4eC+TbAZEwDMM0ja5fpVHdKsKyorTkkmkYCUMOhsHx2PmVlyIwHGZRzqLI44dyV+RRxPKcgqGDY1oI7SSsku+LPC/2e+GfFOqKLJyfnVoysdzzFYu8CvqMz/id+A9Ba1Z/kOilRAAAAABJRU5ErkJggg==" alt="Logo">
+        <h1>CGPA Calculator</h1>
+    </header>
+
+    <!-- Main Content Container -->
+    <div class="container">
+
+        <!-- Formula Section -->
+        <section class="formula-section">
+            <h2>CGPA Calculation Formula</h2>
+            <p>
+             <strong>GPA = ∑ (Grade Points × Course Credits) / ∑Course Credits</strong>
+             <ol><strong>CGPA= ∑ (GPA for each term × Credits for that term)/ ∑ Total Credits for all terms</strong> </ol>
+
+            </p>
+        </section>
+
+        <!-- Instructions Section -->
+        <section class="instructions-section">
+            <h2>Instructions</h2>
+            <ol>
+                <li>Select the number of semesters you have completed.</li>
+                <li>Enter the grades obtained for each course in the respective semesters.</li>
+                <li>Once all grades are entered, click on the "Calculate CGPA" button.</li>
+                <li>Your cumulative CGPA will be displayed below.</li>
+            </ol>
+        </section>
+
+        <!-- Form Section -->
+        <section class="form-section">
+            <div class="form-control">
+                <label for="semesters">Select Number of Semesters Completed:</label>
+                <select id="semesters" onchange="generateSemesters()">
+                    <option value="">--Select Semesters--</option>
+                    <option value="1">1 Semester</option>
+                    <option value="2">2 Semesters</option>
+                    <option value="3">3 Semesters</option>
+                    <option value="4">4 Semesters</option>
+                    <option value="5">5 Semesters</option>
+                    <option value="6">6 Semesters</option>
+                    <option value="7">7 Semesters</option>
+                    <option value="8">8 Semesters</option>
+                </select>
+            </div>
+
+            <div id="semesterContainer"></div>
+
+            <button class="calculate-btn" onclick="calculateCGPA()">Calculate CGPA</button>
+
+            <div id="result" class="result-section" style="display:none;">
+                <h2>Your CGPA is: <span id="cgpaValue"></span></h2>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- JavaScript Section -->
+    <script>
+        // Replace 'your-logo-url-here.png' with the actual URL of your logo image
+        document.querySelector('.header img').src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAMAAACfWMssAAAAz1BMVEX/////ywj1fAD/yQD1fxj1gR7/+vf//Pr+9/D/zAD0eQD1fhP/+fT//vr///33oF795tj83cn+8uf1hCT//PL/+uf/zhn4o1j0dQD2iiz94c/2jkL3lEb2kD/2jTj2jjP4p2v5tn76x6H4q3T83MH/88T/6ZT+9tj/113/66D+8sr/4Xz/6qj/77b/0Tj/3Gf+6sf/2UX+4Kb6uG3/3Fn+3Y/7yIT/1S/3n03+1n/7w3D+1mn+zVT70rb7ynr6wZH+0Er8yV76wIT83bP5t47CKndRAAADlElEQVRIie1T22KiOhTFkHCLAoYKQiOQgK2X0R5PrTrTydDO+P/fdALE01btZeZhnrpf2GRnZa3staNpn/FXY3x1df1HwImuT38L0JvNms9Et+d1cj2++BDu4ktoS+RgsdTtm0FPGyz1+eAjwIGUuF1Mb7Yd3Q4nd4u1rS9nH6KUjJ3Q1iVc7+i6bXdaxR/QOtE7MvTwn1WT2OH4Y8CFZKyBV5f/NsBO5/3mXsx67njbEq5uUTRvU3vq9mZvenql2+tlS2PfURhsFPlyHerbt4BbXTalwemT2xih3Vz9ySbpb3jSm4bqVp3wqwcRSr8pfin3TTPd2Y2iWN8GCCAY3dvt/2rxzvh8UTf87kFHIHig1Nfv4Hoto738EcCdWwHMlKmrV4QmFTFM+b1QwAeGQV8zMaSPYTsN1668iUk4fwnsDp2sSshgbjfA8J7iiGhmhfFmaTe9WY0tn0dg2D+i3EEI8O7n4/eVhNrhxgG8J4VAzB7ksNrLyeMmwgDC2DgCcoAQgjgtvt1LM8MKx4lcJRH2HqTO+x+MYmkPwsw8AhIJzOoj02iztpcezolcNTigD/b2Lr/EEINMOnSsVDMiCLhfZQ6Elz/XSwr2jaa+czlZbSiCADG/H8AROQa6wsF7w+2WIwejYkqdtntJPPr6C2En48TUSulO98QQksG4OU5Q6PAcCQWkPMBpc4qxg/hEqTSkwo5w68zaBwEfKWBWUZD7Te4D7J0ora8TY6qEcBwxBcw9WKjVAiN+BqdZcliEynmct6nPaKGcI68QalqZ4ZHbpuZ+Vzb7SZ4fNjMcnCWsd0NQqZwcGPNDO8oYe9Z5oNb1cFwe9vGGXHClwac4PS/U7PYrTkGqkIaoW2kJReJ7IOWsNvMoLJ/Fw7ggRTAq26LfAJO2nFDokSoFIO8/0XYt4osCgLioryPytGpqrmVqbrdxoiuoxyW1vx8BsBOJT6z68JIVFMsXq1RZgrFGrqlu5yaMiXYEzL4npzaOcl4fSAogH8zId/+XkJTlM0FJ2X/qppXLtwW8pLmOVQUQxfxZr13raZZN63lDBJVvUo1grTaTpJS/mPxyFFksqF5YJ7xAPsvq2b4eC+TbAZEwDMM0ja5fpVHdKsKyorTkkmkYCUMOhsHx2PmVlyIwHGZRzqLI44dyV+RRxPKcgqGDY1oI7SSsku+LPC/2e+GfFOqKLJyfnVoysdzzFYu8CvqMz/id+A9Ba1Z/kOilRAAAAABJRU5ErkJggg==';
+
+        const coursesData = {
+            1: [
+                { code: "23EN101T", name: "Communicative English", credits: 3 },
+                { code: "23MA101T", name: "Matrix and Calculus", credits: 4 },
+                { code: "23PH101T", name: "Engineering Physics", credits: 3 },
+                { code: "23CH101T", name: "Engineering Chemistry", credits: 3 },
+                { code: "23CS101C", name: "Problem Solving and Python Programming", credits: 3 },
+                { code: "23GE101T", name: "Heritage of Tamil", credits: 1 },
+                { code: "23CS102L", name: "Python Programming Laboratory", credits: 2 },
+                { code: "23BS102L", name: "Physics and Chemistry Laboratory", credits: 2 },
+                { code: "23EN102L", name: "Communicative English Laboratory", credits: 1 }
+            ],
+            2: [
+                { code: "23EN103T", name: "Technical English", credits: 3 },
+                { code: "23MA102T", name: "Statistics and Numerical Methods", credits: 4 },
+                { code: "23PH105T", name: "Physics for Computer Science Engineers", credits: 3 },
+                { code: "23ME101T", name: "Engineering Graphics", credits: 4 },
+                { code: "23CS103T", name: "Programming in C", credits: 3 },
+                { code: "23GE102T", name: "Tamils and Technology", credits: 1 },
+                { code: "23CH102T", name: "Environmental Science and Sustainability", credits: 2 },
+                { code: "23ME102L", name: "Engineering Practices Laboratory", credits: 2 },
+                { code: "23CS104L", name: "Programming in C Laboratory", credits: 2 },
+                { code: "23EN104L", name: "Technical English Laboratory", credits: 2 }
+            ],
+            3: [
+                { code: "23CS201T", name: "Digital Principles and Computer Organization", credits: 4 },
+                { code: "23AD208T", name: "Foundations of Data Science", credits: 3 },
+                { code: "23CS202T", name: "Data Structures", credits: 4 },
+                { code: "23IT201T", name: "Object Oriented Programming", credits: 3 },
+                { code: "23CS206T", name: "Operating Systems", credits: 3 },
+                { code: "23CS203L", name: "Data Structures Laboratory", credits: 2 },
+                { code: "23IT202L", name: "Object Oriented Programming Laboratory", credits: 2 },
+                { code: "23AD209L", name: "Data Science Laboratory", credits: 2 },
+                { code: "23TP201L", name: "Quantitative Aptitude and Verbal Reasoning", credits: 1 }
+            ],
+            4: [
+                { code: "23CS205T", name: "Design and Analysis of Algorithms", credits: 4 },
+                { code: "23MA201T", name: "Discrete Mathematics", credits: 4 },
+                { code: "23IT203T", name: "Software Engineering", credits: 3 },
+                { code: "23IT204T", name: "Database Management Systems", credits: 3 },
+                { code: "23IT205T", name: "Java Programming", credits: 3 },
+                { code: "23IT206L", name: "Database Management Systems Laboratory", credits: 2 },
+                { code: "23IT207L", name: "Java Programming Laboratory", credits: 2 },
+                { code: "23TP202L", name: "Quantitative Aptitude & Behavioral Skills", credits: 2 }
+            ],
+            5: [
+                { code: "23IT301T", name: "Data Communication and Networking", credits: 4 },
+                { code: "23IT302T", name: "Web Development", credits: 3 },
+                { code: "23IT303T", name: "Web Essentials", credits: 4 },
+                { code: "23CS301T", name: "Compiler Design", credits: 3 },
+                { code: "23IT304L", name: "Full Stack Web Development Laboratory", credits: 2 },
+                { code: "234301L", name: "Quantitative Aptitude and Communication Skills", credits: 1 }
+            ],
+            6: [
+                { code: "23AD308T", name: "Artificial Intelligence and Machine Learning", credits: 4 },
+                { code: "23IT305T", name: "Mobile Computing", credits: 3 },
+                { code: "ELEC_OPEN_II", name: "Open Elective II", credits: 3 },
+                { code: "ELEC_PROF_II", name: "Professional Elective II", credits: 3 },
+                { code: "ELEC_PROF_VI", name: "Professional Elective VI", credits: 3 },
+                { code: "23IT306L", name: "Mobile Application and Development Laboratory", credits: 2 },
+                { code: "23IT307L", name: "Comprehension", credits: 1 },
+                { code: "23TP302L", name: "Quantitative Aptitude and Soft Skills", credits: 1 }
+            ],
+            7: [
+                { code: "23MS6851", name: "Human Values and Ethics", credits: 2 },
+                { code: "ELEC_MGMT", name: "Management Elective", credits: 3 },
+                { code: "ELEC_OPEN_III", name: "Open Elective III", credits: 3 },
+                { code: "ELEC_PROF_V", name: "Professional Elective V", credits: 3 },
+                { code: "ELEC_PROF_VI", name: "Professional Elective VI", credits: 3 },
+                { code: "INTERNSHIP", name: "Summer Internship", credits: 2 }
+            ],
+            8: [
+                { code: "23IT402L", name: "Project Work", credits: 10 }
+            ]
+        };
+
+        const gradePoints = {
+            "O": 10,
+            "A+": 9,
+            "A": 8,
+            "B+": 7,
+            "B": 6,
+            "C": 5,
+            "U": 0
+        };
+
+        function generateSemesters() {
+            const semesterContainer = document.getElementById('semesterContainer');
+            semesterContainer.innerHTML = '';
+            const numSemesters = parseInt(document.getElementById('semesters').value);
+
+            if (!numSemesters) return;
+
+            for (let i = 1; i <= numSemesters; i++) {
+                const semesterDiv = document.createElement('div');
+                semesterDiv.className = 'semester';
+
+                const semesterTitle = document.createElement('h3');
+                semesterTitle.textContent = `Semester ${i}`;
+                semesterDiv.appendChild(semesterTitle);
+
+                const courses = coursesData[i];
+                if (courses) {
+                    courses.forEach(course => {
+                        const courseDiv = document.createElement('div');
+                        courseDiv.className = 'course';
+
+                        const courseName = document.createElement('div');
+                        courseName.className = 'course-name';
+                        courseName.textContent = `${course.name} (${course.credits} Credits)`;
+
+                        const gradeSelect = document.createElement('select');
+                        gradeSelect.className = 'grade-select';
+                        gradeSelect.id = `grade${course.code}`;
+
+                        const defaultOption = document.createElement('option');
+                        defaultOption.value = '';
+                        defaultOption.textContent = '--Select Grade--';
+                        gradeSelect.appendChild(defaultOption);
+
+                        for (const grade in gradePoints) {
+                            const option = document.createElement('option');
+                            option.value = grade;
+                            option.textContent = grade;
+                            gradeSelect.appendChild(option);
+                        }
+
+                        courseDiv.appendChild(courseName);
+                        courseDiv.appendChild(gradeSelect);
+
+                        semesterDiv.appendChild(courseDiv);
+                    });
+                } else {
+                    const noCoursesMsg = document.createElement('p');
+                    noCoursesMsg.textContent = 'Course data not available for this semester.';
+                    semesterDiv.appendChild(noCoursesMsg);
+                }
+
+                semesterContainer.appendChild(semesterDiv);
+            }
+        }
+
+        function calculateCGPA() {
+            const numSemesters = parseInt(document.getElementById('semesters').value);
+            if (!numSemesters) {
+                alert('Please select the number of semesters.');
+                return;
+            }
+
+            let totalCredits = 0;
+            let totalGradePoints = 0;
+            let allGradesSelected = true;
+
+            for (let i = 1; i <= numSemesters; i++) {
+                const courses = coursesData[i];
+                if (courses) {
+                    courses.forEach(course => {
+                        const gradeValue = document.getElementById(`grade${course.code}`).value;
+                        if (gradeValue === '') {
+                            allGradesSelected = false;
+                        } else {
+                            totalCredits += course.credits;
+                            totalGradePoints += gradePoints[gradeValue] * course.credits;
+                        }
+                    });
+                }
+            }
+
+            if (!allGradesSelected) {
+                alert('Please select grades for all courses.');
+                return;
+            }
+
+            const cgpa = totalGradePoints / totalCredits;
+            document.getElementById('cgpaValue').textContent = cgpa.toFixed(2);
+            document.getElementById('result').style.display = 'block';
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+    </script>
+</body>
+</html>
